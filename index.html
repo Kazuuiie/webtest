@@ -1,0 +1,1172 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kazuuiie_VN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     BỐ CỤC: sidebar trái | hồ sơ hoặc trang Music ở giữa | cột card bên phải
+     ============================================================ */
+  :root {
+    --bg: #070a1a;
+    --text: #e8ecff;
+    --muted: #9aa3cf;
+    --accent: #8fa6ff;
+    --card: rgba(14, 18, 44, 0.55);
+    --line: rgba(160, 175, 255, 0.18);
+    --hover: rgba(160, 175, 255, 0.08);
+    --active: rgba(160, 175, 255, 0.14);
+    --font: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  [hidden] { display: none !important; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  button { font: inherit; color: inherit; }
+
+  /* ---------- Nền (để trống ảnh thì dùng nền sao mặc định) ---------- */
+  .bg {
+    position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(1.2px 1.2px at 12% 18%, #fff, transparent),
+      radial-gradient(1px 1px at 28% 62%, #cfd8ff, transparent),
+      radial-gradient(1.4px 1.4px at 44% 12%, #fff, transparent),
+      radial-gradient(1px 1px at 63% 38%, #bcc8ff, transparent),
+      radial-gradient(1.2px 1.2px at 78% 74%, #fff, transparent),
+      radial-gradient(1px 1px at 90% 20%, #cfd8ff, transparent),
+      radial-gradient(1px 1px at 55% 85%, #fff, transparent),
+      radial-gradient(ellipse at 80% 20%, #1b2a6b 0%, transparent 55%),
+      radial-gradient(ellipse at 20% 100%, #0f1a4a 0%, transparent 60%),
+      #070a1a;
+    background-size: cover;
+    background-position: center;
+  }
+  .bg-overlay { position: fixed; inset: 0; z-index: -1; background: #04061a; opacity: 0; }
+
+  .icon { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .icon.solid { fill: currentColor; stroke: none; }
+
+  /* ---------- Khung chính ---------- */
+  .page {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr) 380px;
+    gap: 32px;
+    min-height: 100vh;
+    padding: 28px 40px 40px 28px;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .side { display: flex; flex-direction: column; gap: 48px; }
+  .brand { display: flex; align-items: center; gap: 22px; font-size: 1.05rem; letter-spacing: .02em; padding-left: 4px; }
+  .brand .spark { width: 34px; height: 34px; color: var(--accent); }
+  .nav { display: flex; flex-direction: column; gap: 6px; }
+  .nav a {
+    display: flex; align-items: center; gap: 14px;
+    padding: 11px 16px; border-radius: 10px;
+    color: var(--muted); text-decoration: none; font-size: .95rem;
+    transition: background .2s, color .2s;
+  }
+  .nav a:hover { color: var(--text); background: var(--hover); }
+  .nav a.active { color: var(--text); background: var(--active); }
+  a:focus-visible, button:focus-visible, .range:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- Cột giữa ---------- */
+  .main { display: flex; flex-direction: column; padding-top: 48px; min-width: 0; }
+  .view { display: flex; flex-direction: column; gap: 36px; min-width: 0; }
+  .topbar-right {
+    position: absolute; top: 34px; right: 40px;
+    display: flex; align-items: center; gap: 14px;
+    font-size: .8rem; color: var(--muted);
+  }
+  .topbar-right i { display: block; width: 56px; height: 1px; background: var(--line); }
+  .topbar-right .icon { color: var(--accent); }
+
+  .profile { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .avatar-ring {
+    width: 144px; height: 144px; border-radius: 50%;
+    padding: 6px; border: 2px solid rgba(143,166,255,.55);
+    box-shadow: 0 0 30px rgba(110,140,255,.35);
+    flex: none;
+  }
+  .avatar-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; background: #121842; }
+  .who { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .who h1 { font-weight: 400; font-size: 2.2rem; letter-spacing: .02em; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; overflow-wrap: anywhere; }
+  .who h1 .icon { color: var(--accent); width: .6em; height: .6em; }
+  .who p { color: var(--muted); font-size: .95rem; }
+  .socials { display: flex; gap: 22px; margin-top: 6px; }
+  .socials a { color: var(--text); display: grid; place-items: center; opacity: .9; transition: color .2s, transform .2s; }
+  .socials a:hover { color: var(--accent); transform: translateY(-2px); }
+  .socials .icon { width: 28px; height: 28px; }
+
+  .info { display: flex; flex-wrap: wrap; gap: 0; }
+  .info-item { display: flex; gap: 12px; align-items: flex-start; padding: 0 28px; border-left: 1px solid var(--line); }
+  .info-item:first-child { padding-left: 0; border-left: 0; }
+  .info-item .icon { color: var(--muted); margin-top: 2px; }
+  .info-item small { display: block; color: var(--muted); font-size: .8rem; margin-bottom: 4px; }
+  .info-item span { font-size: .8rem; }
+
+  .quote { max-width: 260px; color: var(--muted); font-style: italic; font-size: .95rem; line-height: 1.7; }
+  .quote cite { display: flex; align-items: center; gap: 12px; margin-top: 14px; font-size: .75rem; font-style: normal; }
+  .quote cite i { display: block; width: 56px; height: 1px; background: var(--line); }
+
+  /* ---------- Cột phải ---------- */
+  .right { display: flex; flex-direction: column; gap: 22px; padding-top: 48px; min-width: 0; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 20px 22px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .card h2 { display: flex; align-items: center; gap: 12px; font-weight: 400; font-size: 1rem; margin-bottom: 18px; }
+  .card h2 .icon { color: var(--text); }
+
+  /* ---------- Thanh trượt dùng chung (tiến trình + âm lượng) ---------- */
+  .range {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 16px; background: transparent; cursor: pointer; --p: 0%;
+  }
+  .range::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(to right, var(--accent) var(--p), rgba(160,175,255,.25) var(--p)); }
+  .range::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; margin-top: -4px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px rgba(143,166,255,.8); }
+  .range::-moz-range-track { height: 4px; border-radius: 4px; background: rgba(160,175,255,.25); }
+  .range::-moz-range-progress { height: 4px; border-radius: 4px; background: var(--accent); }
+  .range::-moz-range-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 0 8px rgba(143,166,255,.8); }
+
+  /* ---------- Music box ---------- */
+  .player { display: flex; flex-direction: column; gap: 14px; }
+  .now { display: flex; gap: 14px; align-items: flex-start; }
+  .cover { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; background: #121842; flex: none; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+  .now-text { flex: 1; min-width: 0; padding-top: 2px; }
+  .now-text small { color: var(--muted); font-size: .72rem; }
+  .now-text strong { display: block; font-weight: 400; font-size: 1.15rem; margin: 2px 0; overflow-wrap: anywhere; }
+  .now-text span { font-size: .8rem; color: var(--muted); }
+  .heart { color: var(--muted); background: none; border: 0; cursor: pointer; padding: 2px; transition: color .2s, transform .2s; }
+  .heart:hover { color: var(--accent); }
+  .heart.on { color: var(--accent); }
+  .heart.on .icon { fill: currentColor; }
+
+  .seek-wrap { display: flex; flex-direction: column; gap: 2px; }
+  .times { display: flex; justify-content: space-between; font-size: .72rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  .controls { display: flex; justify-content: center; align-items: center; gap: 20px; }
+  .ctrl { position: relative; background: none; border: 0; color: var(--accent); cursor: pointer; display: grid; place-items: center; padding: 4px; transition: color .2s, transform .15s; }
+  .ctrl:hover { transform: scale(1.08); }
+  .ctrl .icon { width: 22px; height: 22px; }
+  .ctrl.sm { color: var(--muted); }
+  .ctrl.sm .icon { width: 18px; height: 18px; }
+  .ctrl.sm.on { color: var(--accent); }
+  .ctrl.sm[data-mode="one"]::after {
+    content: "1"; position: absolute; right: -2px; top: -2px;
+    font-size: .6rem; line-height: 1; font-weight: 600; color: var(--accent);
+  }
+  .ctrl.play {
+    width: 50px; height: 50px; border-radius: 50%; padding: 0;
+    background: rgba(143,166,255,.18); border: 1px solid rgba(143,166,255,.5);
+    box-shadow: 0 0 18px rgba(110,140,255,.3);
+  }
+  .ctrl.play .icon { width: 24px; height: 24px; }
+
+  /* Nút âm lượng: thanh trượt nhỏ nổi lên khi di chuột / bấm vào */
+  .vol { position: relative; display: grid; place-items: center; }
+  .vol:hover > .ctrl, .vol.open > .ctrl { color: var(--accent); }
+  .vol-pop {
+    position: absolute; right: -10px; bottom: calc(100% + 8px);
+    display: flex; align-items: center; gap: 8px; width: 150px;
+    padding: 6px 14px; border-radius: 999px;
+    background: rgba(12, 16, 40, .94); border: 1px solid var(--line);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+    opacity: 0; visibility: hidden; transform: translateY(4px);
+    transition: opacity .18s, transform .18s, visibility .18s;
+  }
+  .vol-pop::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 12px; }
+  .vol:hover .vol-pop, .vol:has(:focus-visible) .vol-pop, .vol.open .vol-pop { opacity: 1; visibility: visible; transform: none; }
+  .vol-pop .range { flex: 1; min-width: 0; height: 14px; }
+  .vol-num { width: 1.9em; text-align: right; font-size: .7rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  .mini-head { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--line); font-size: .85rem; }
+  .mini-head span { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .link-btn { background: none; border: 0; cursor: pointer; color: var(--accent); font-size: .78rem; padding: 2px 4px; border-radius: 6px; }
+  .link-btn:hover { text-decoration: underline; }
+  .mini-actions { display: flex; align-items: center; gap: 6px; }
+  .dots { background: none; border: 0; cursor: pointer; color: var(--muted); width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; transition: background .2s, color .2s; }
+  .dots:hover { background: var(--hover); color: var(--text); }
+  .dots[aria-expanded="true"] { color: var(--accent); }
+  .dots .icon { width: 20px; height: 20px; }
+  .mini-wrap { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .25s ease; margin-top: -4px; }
+  .mini-wrap.closed { grid-template-rows: 0fr; }
+  .mini-wrap.closed .mini-list { visibility: hidden; }
+
+  .mini-list { position: relative; min-height: 0; display: flex; flex-direction: column; gap: 2px; max-height: 172px; overflow-y: auto; margin: 0 -8px; padding: 0 8px; scrollbar-width: thin; scrollbar-color: rgba(160,175,255,.3) transparent; }
+  .mini-list::-webkit-scrollbar { width: 6px; }
+  .mini-list::-webkit-scrollbar-thumb { background: rgba(160,175,255,.3); border-radius: 6px; }
+
+  /* Hàng bài hát (dùng cho cả mini list và danh sách đầy đủ) */
+  .trk, .row {
+    display: grid; align-items: center; width: 100%;
+    border: 0; border-radius: 10px; background: none; text-align: left; cursor: pointer;
+    transition: background .2s;
+  }
+  .trk:hover, .row:hover { background: var(--hover); }
+  .trk.active, .row.active { background: var(--active); }
+  .trk { grid-template-columns: 38px minmax(0, 1fr) auto; gap: 12px; padding: 6px 8px; }
+  .row { grid-template-columns: 34px 48px minmax(0, 1fr) auto; gap: 14px; padding: 10px 14px; }
+  .tc { width: 38px; height: 38px; border-radius: 7px; object-fit: cover; background: #121842; }
+  .row .tc { width: 48px; height: 48px; border-radius: 8px; }
+  .tt { min-width: 0; }
+  .tt b { display: block; font-weight: 400; font-size: .9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tt small { display: block; color: var(--muted); font-size: .74rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .tt b { font-size: 1rem; }
+  .row .tt small { font-size: .8rem; }
+  .dur { color: var(--muted); font-size: .75rem; font-variant-numeric: tabular-nums; }
+  .ix { display: grid; place-items: center; color: var(--muted); font-size: .85rem; font-variant-numeric: tabular-nums; }
+  .ix b { font-weight: 400; }
+
+  /* Equalizer: hiện ở bài đang chọn, chạy khi đang phát */
+  .eq { display: none; align-items: flex-end; gap: 2px; height: 14px; }
+  .eq i { display: block; width: 3px; height: 100%; border-radius: 2px; background: var(--accent); transform-origin: bottom; transform: scaleY(.4); animation: eq .9s ease-in-out infinite; animation-play-state: paused; }
+  .eq i:nth-child(2) { animation-delay: -.3s; }
+  .eq i:nth-child(3) { animation-delay: -.6s; }
+  .trk.active .eq, .row.active .eq { display: flex; }
+  .trk.active .dur { display: none; }
+  .row.active .ix b { display: none; }
+  .is-playing .active .eq i { animation-play-state: running; }
+  @keyframes eq { 0%, 100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
+
+  /* ---------- Trang Music ---------- */
+  .mv-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .mv-head h2 { font-weight: 400; font-size: 1.8rem; letter-spacing: .02em; }
+  .mv-head small { display: block; color: var(--muted); font-size: .85rem; margin-top: 4px; }
+  .mv-actions { display: flex; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 999px; cursor: pointer; font-size: .85rem; background: rgba(143,166,255,.18); border: 1px solid rgba(143,166,255,.5); transition: background .2s; }
+  .btn:hover { background: rgba(143,166,255,.3); }
+  .btn.ghost { background: none; border-color: var(--line); color: var(--muted); }
+  .btn.ghost:hover { background: var(--hover); color: var(--text); }
+  .btn.ghost.on { color: var(--accent); border-color: rgba(143,166,255,.5); }
+  .btn .icon { width: 16px; height: 16px; }
+  .plist { display: flex; flex-direction: column; gap: 2px; padding: 10px; }
+
+  .thanks { display: flex; align-items: center; justify-content: center; gap: 16px; color: var(--muted); font-size: .8rem; margin-top: 4px; }
+  .thanks i { display: block; width: 56px; height: 1px; background: var(--line); }
+
+  /* Skills + Interests */
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { padding: 7px 18px; border-radius: 999px; background: rgba(160,175,255,.1); border: 1px solid var(--line); font-size: .82rem; }
+  .interests { display: flex; flex-direction: column; gap: 4px; }
+  .interest { display: flex; align-items: center; gap: 14px; padding: 8px 0; font-size: .92rem; }
+  .interest .icon { width: 22px; height: 22px; }
+  .interest em { margin-left: auto; font-style: normal; color: var(--muted); font-size: .72rem; text-align: right; }
+
+  /* ---------- Màn hình hố đen + chuyển cảnh ---------- */
+  #intro { position: fixed; inset: 0; z-index: 100; background: #02030a; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: opacity .9s ease; }
+  #intro:focus { outline: none; }
+  #intro.leaving { opacity: 0; pointer-events: none; }
+  #intro canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .intro-hint {
+    position: absolute; left: 0; right: 0; bottom: 12vh; padding: 0 16px;
+    text-align: center; font-size: .85rem; letter-spacing: .35em; text-transform: uppercase;
+    color: var(--muted); pointer-events: none;
+    animation: hint 2.6s ease-in-out infinite;
+  }
+  #intro.going .intro-hint { animation: none; opacity: 0; transition: opacity .35s; }
+  @keyframes hint { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  html.intro-on, html.intro-on body { overflow: hidden; height: 100%; }
+  html.intro-on .page { visibility: hidden; }
+  .page.reveal { animation: enter 1.3s cubic-bezier(.2, .7, .2, 1) both; }
+  @keyframes enter {
+    from { opacity: 0; transform: scale(1.08); filter: blur(12px); }
+    to   { opacity: 1; transform: none; filter: none; }
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1180px) {
+    .page { grid-template-columns: 180px minmax(0, 1fr); }
+    .right { grid-column: 2; padding-top: 0; }
+  }
+  @media (max-width: 820px) {
+    .page { grid-template-columns: minmax(0, 1fr); padding: 20px 16px 32px; gap: 24px; }
+    .side { gap: 20px; }
+    .nav { flex-direction: row; flex-wrap: wrap; }
+    .nav a { padding: 9px 12px; }
+    .right { grid-column: 1; }
+    .main { padding-top: 8px; }
+    .topbar-right { display: none; }
+    .info-item { padding: 8px 16px 8px 0; border-left: 0; }
+    .row { grid-template-columns: 26px 44px minmax(0, 1fr) auto; gap: 10px; padding: 8px; }
+    .row .tc { width: 44px; height: 44px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+    .intro-hint { animation: none; opacity: .8; }
+    .page.reveal { animation-duration: .01s; }
+    .eq i { animation: none !important; transform: scaleY(.7); }
+    .eq i:nth-child(2) { transform: scaleY(1); }
+    .eq i:nth-child(3) { transform: scaleY(.5); }
+  }
+</style>
+</head>
+<body>
+<div class="bg" id="bg"></div>
+<div class="bg-overlay" id="bgOverlay"></div>
+
+<div id="intro" role="button" tabindex="0" aria-label="Chạm để vào trang">
+  <canvas id="introCanvas"></canvas>
+  <p class="intro-hint" id="introHint"></p>
+</div>
+<noscript><style>#intro { display: none; }</style></noscript>
+
+<div class="page">
+  <aside class="side">
+    <div class="brand"><svg class="icon solid spark" viewBox="0 0 24 24"><path d="M12 1l1.6 8.4L22 12l-8.4 2.6L12 23l-1.6-8.4L2 12l8.4-2.6z"/></svg><span id="brandText"></span></div>
+    <nav class="nav" id="nav"></nav>
+  </aside>
+
+  <main class="main">
+    <div class="topbar-right"><span id="topRight"></span><i></i><svg class="icon solid" viewBox="0 0 24 24"><path d="M12 2l1.6 8.4L22 12l-8.4 1.6L12 22l-1.6-8.4L2 12l8.4-1.6z"/></svg></div>
+
+    <!-- Trang chủ -->
+    <div class="view" id="viewHome">
+      <section class="profile">
+        <div class="avatar-ring"><img id="avatar" alt="Avatar"></div>
+        <div class="who">
+          <h1><span id="name"></span><svg class="icon solid" viewBox="0 0 24 24"><path d="M12 1l1.6 8.4L22 12l-8.4 2.6L12 23l-1.6-8.4L2 12l8.4-2.6z"/></svg></h1>
+          <p id="tagline"></p>
+          <div class="socials" id="socials"></div>
+        </div>
+      </section>
+
+      <section class="info" id="info"></section>
+
+      <blockquote class="quote">
+        <span id="quoteText"></span>
+        <cite><i></i><span id="quoteAuthor"></span></cite>
+      </blockquote>
+    </div>
+
+    <!-- Trang Music -->
+    <div class="view" id="viewMusic" hidden>
+      <div class="mv-head">
+        <div>
+          <h2>Playlist</h2>
+          <small id="plCount"></small>
+        </div>
+        <div class="mv-actions">
+          <button class="btn" id="playAll"></button>
+          <button class="btn ghost" id="shuffleAll"></button>
+        </div>
+      </div>
+      <section class="card plist" id="fullList"></section>
+    </div>
+  </main>
+
+  <aside class="right">
+    <section class="card player">
+      <div class="now">
+        <img class="cover" id="cover" alt="">
+        <div class="now-text">
+          <small id="nowLabel"></small>
+          <strong id="songTitle"></strong>
+          <span id="songArtist"></span>
+        </div>
+        <button class="heart" id="heart" aria-label="Yêu thích"></button>
+      </div>
+
+      <div class="seek-wrap">
+        <input class="range" id="seek" type="range" min="0" max="1000" step="1" value="0" aria-label="Tua bài hát">
+        <div class="times"><span id="tNow">0:00</span><span id="tTotal">0:00</span></div>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl sm" id="shuffle" aria-label="Phát ngẫu nhiên" title="Phát ngẫu nhiên"></button>
+        <button class="ctrl" id="prev" aria-label="Bài trước"></button>
+        <button class="ctrl play" id="play" aria-label="Phát / Dừng"></button>
+        <button class="ctrl" id="next" aria-label="Bài sau"></button>
+        <button class="ctrl sm" id="repeat" aria-label="Lặp lại" title="Lặp lại" data-mode="off"></button>
+        <div class="vol" id="volWrap">
+          <button class="ctrl sm" id="mute" aria-label="Âm lượng" title="Âm lượng"></button>
+          <div class="vol-pop">
+            <input class="range" id="vol" type="range" min="0" max="100" step="1" value="70" aria-label="Âm lượng">
+            <span class="vol-num" id="volNum">70</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini-head">
+        <span id="miniTitle"></span>
+        <div class="mini-actions">
+          <button class="link-btn" id="viewAll">Xem tất cả</button>
+          <button class="dots" id="miniToggle" aria-expanded="true" aria-controls="miniList" aria-label="Mở hoặc tắt danh sách phát" title="Mở / tắt danh sách"></button>
+        </div>
+      </div>
+      <div class="mini-wrap" id="miniWrap">
+        <div class="mini-list" id="miniList"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><svg class="icon solid" viewBox="0 0 24 24"><path d="M12 2l3 6.6 7.2.8-5.4 4.8 1.5 7.1L12 17.6 5.7 21.3l1.5-7.1L1.8 9.4 9 8.6z"/></svg>My Skills</h2>
+      <div class="chips" id="skills"></div>
+    </section>
+
+    <section class="card">
+      <h2 id="interestsTitle"></h2>
+      <div class="interests" id="interests"></div>
+    </section>
+
+    <div class="thanks"><i></i><span id="footer"></span><i></i></div>
+  </aside>
+</div>
+
+<script>
+/* ==================================================================
+   BIO CONFIG  —  chỉ cần sửa phần này
+   ================================================================== */
+const CONFIG = {
+  // --- Discord (lấy avatar + tên qua Lanyard API) ---
+  // Bước 1: vào discord.gg/lanyard và tham gia server (để Lanyard đọc được tài khoản bạn)
+  // Bước 2: dán ID Discord của bạn vào userId (Discord > Cài đặt > Nâng cao > Chế độ nhà phát triển > chuột phải avatar > Sao chép ID)
+  discord: {
+    enabled: true,
+    userId: "",              // ví dụ: "123456789012345678"
+    useName: true,           // true = dùng tên Discord thay cho "name" bên dưới
+    useAvatar: true,         // true = dùng avatar Discord thay cho "avatar" bên dưới
+    nameType: "global_name"  // "global_name" (tên hiển thị) hoặc "username"
+  },
+
+  // --- Thông tin chung (dùng khi Discord tắt hoặc lỗi) ---
+  name: "Kazuuiie_VN",
+  avatar: "",                // link ảnh dự phòng, để trống thì dùng ảnh mặc định
+  tagline: "Just a guy who loves music, tech and the stars.",
+  brand: "Kazuuiie_VN",      // chữ cạnh logo ở góc trái trên
+  topRight: "Better version of me",
+  footer: "Thanks for visiting!",
+
+  // --- Màn hình hố đen lúc mới vào trang ---
+  intro: {
+    enabled: true,           // false = bỏ qua, vào thẳng trang bio
+    text: "Chạm để vào",     // chữ hiện dưới hố đen
+    startMusic: true         // true = bắt đầu phát nhạc ngay khi chạm vào
+  },
+
+  // --- Nền (làm sau): dán link ảnh vào image ---
+  background: {
+    image: "",               // ví dụ: "bg.jpg"
+    dim: 0.35                // làm tối ảnh, 0 đến 1
+  },
+
+  // --- Menu bên trái ---
+  // view: "home" hoặc "music" để chuyển trang ngay trong web, còn lại dùng href
+  nav: [
+    { icon: "home",  label: "Home",    view: "home" },
+    { icon: "user",  label: "About",   href: "#" },
+    { icon: "music", label: "Music",   view: "music" },
+    { icon: "image", label: "Gallery", href: "#" },
+    { icon: "link",  label: "Links",   href: "#" }
+  ],
+
+  // --- Mạng xã hội (type: discord | youtube | github | roblox) ---
+  socials: [
+    { type: "discord", url: "#" },
+    { type: "youtube", url: "#" },
+    { type: "github",  url: "#" },
+    { type: "roblox",  url: "#" }
+  ],
+
+  // --- Thông tin cá nhân ---
+  info: [
+    { icon: "user",     label: "Name",     value: "Kazuuiie_VN" },
+    { icon: "calendar", label: "Birthday", value: "?? / ?? / ???" },
+    { icon: "pin",      label: "Location", value: "Việt Nam 🇻🇳" },
+    { icon: "heart",    label: "Hobbies",  value: "Music • Game • Coding • Anime" }
+  ],
+
+  // --- Câu quote ---
+  quote: {
+    text: "“The universe is not only stranger than we imagine, it is stranger than we can imagine.”",
+    author: "J. B. S. Haldane"
+  },
+
+  // --- Trình phát nhạc ---
+  music: {
+    label: "Đang phát",
+    miniTitle: "Danh sách phát",
+    miniOpen: true,          // true = mở sẵn danh sách phát trong music box
+    volume: 0.7,             // âm lượng mặc định, 0 đến 1
+    // Mỗi bài: title, artist, cover (link ảnh), src (link file mp3), duration (giây)
+    // Bài nào để trống src thì chỉ chạy giả lập thanh tiến trình theo duration
+    playlist: [
+      { title: "3107",         artist: "Hoài Lâm",  cover: "", src: "", duration: 255 },
+      { title: "Bài hát 2",    artist: "Nghệ sĩ 2", cover: "", src: "", duration: 214 },
+      { title: "Bài hát 3",    artist: "Nghệ sĩ 3", cover: "", src: "", duration: 187 },
+      { title: "Bài hát 4",    artist: "Nghệ sĩ 4", cover: "", src: "", duration: 240 },
+      { title: "Bài hát 5",    artist: "Nghệ sĩ 5", cover: "", src: "", duration: 199 }
+    ]
+  },
+
+  // --- Kỹ năng ---
+  skills: ["HTML", "CSS", "JavaScript", "Python", "Minecraft", "Git", "Photoshop", "..."],
+
+  // --- Sở thích ---
+  interestsTitle: "Interests",
+  interests: [
+    { icon: "music", title: "Music",      note: "Good Music = Good Mood" },
+    { icon: "game",  title: "Gaming",     note: "Play to relax" },
+    { icon: "tv",    title: "Anime",      note: "2D > 3D" },
+    { icon: "cpu",   title: "Technology", note: "Always curious" },
+    { icon: "planet",title: "Space",      note: "The sky is not the limit" }
+  ]
+};
+/* ==================== HẾT PHẦN CONFIG ==================== */
+
+
+/* ---------- Bộ icon ---------- */
+const ICONS = {
+  home:    '<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
+  user:    '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+  music:   '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  image:   '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
+  link:    '<path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  pin:     '<path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',
+  heart:   '<path d="M12 21s-7.5-4.6-9.6-9.4C.9 8.2 2.9 4.5 6.4 4.5c2 0 3.7 1.1 4.6 2.7h2c.9-1.6 2.6-2.7 4.6-2.7 3.5 0 5.5 3.7 4 7.1C19.5 16.4 12 21 12 21z"/>',
+  game:    '<rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10v5M4.5 12.5h5"/><circle cx="16" cy="11.5" r=".8"/><circle cx="18.5" cy="13.5" r=".8"/>',
+  tv:      '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 3l4 4 4-4"/>',
+  cpu:     '<rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>',
+  planet:  '<circle cx="12" cy="12" r="5"/><path d="M3 15c-1-2 4-6 10-8s11-2 9 0M21 9c1 2-4 6-10 8s-9 2-8 0" transform="rotate(-18 12 12)"/>',
+  discord: '<path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>',
+  youtube: '<path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>',
+  github: '<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>',
+  roblox: '<path d="M18.926 23.998 0 18.892 5.075.002 24 5.108ZM15.348 10.09l-5.282-1.453-1.414 5.273 5.282 1.453z"/>',
+  dots:   '<circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/>',
+  rocket:  '<path d="M5 15c-1.5 1-2 4-2 6 2 0 5-.5 6-2M14 5c3-3 7-3 7-3s0 4-3 7l-6 6-4-4z"/><circle cx="15.5" cy="8.5" r="1.2"/><path d="M9 11l-3-.5 2-3 3-.5M13 15l.5 3 3-2 .5-3"/>',
+  list:    '<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+  shuffle: '<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+  repeat:  '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  volHigh: '<path d="M11 5L6 9H2v6h4l5 4z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>',
+  volLow:  '<path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>',
+  volMute: '<path d="M11 5L6 9H2v6h4l5 4z"/><path d="M23 9l-6 6M17 9l6 6"/>',
+  prev:    '<path d="M11 6v12L2 12zM22 6v12l-9-6z"/>',
+  next:    '<path d="M13 6v12l9-6zM2 6v12l9-6z"/>',
+  play:    '<path d="M7 4l13 8-13 8z"/>',
+  pause:   '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>'
+};
+const SOLID = new Set(["prev", "next", "play", "pause", "discord", "youtube", "github", "roblox", "dots"]);
+const svg = (name, cls = "") =>
+  `<svg class="icon ${SOLID.has(name) ? "solid " : ""}${cls}" viewBox="0 0 24 24">${ICONS[name] || ICONS.link}</svg>`;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+
+/* ---------- Ảnh mặc định khi chưa có avatar / cover ---------- */
+const placeholder = (a, b) => "data:image/svg+xml," + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="100" height="100" fill="url(#g)"/></svg>`
+);
+const DEFAULT_AVATAR = placeholder("#2a3a8f", "#0b1030");
+const coverOf = (t, i) => t.cover || placeholder(`hsl(${(225 + i * 31) % 360} 55% 40%)`, `hsl(${(225 + i * 31) % 360} 50% 12%)`);
+
+/* ---------- Dựng giao diện từ CONFIG ---------- */
+function render() {
+  const c = CONFIG;
+
+  if (c.background.image) {
+    $("bg").style.backgroundImage = `url("${c.background.image}")`;
+    $("bgOverlay").style.opacity = c.background.dim;
+  }
+
+  $("brandText").textContent = c.brand;
+  $("topRight").textContent = c.topRight;
+  $("name").textContent = c.name;
+  $("tagline").textContent = c.tagline;
+  $("avatar").src = c.avatar || DEFAULT_AVATAR;
+  $("footer").textContent = c.footer;
+  document.title = c.name;
+
+  $("nav").innerHTML = c.nav.map((n) => n.view
+    ? `<a href="#${n.view}" data-view="${n.view}">${svg(n.icon)}<span>${n.label}</span></a>`
+    : `<a href="${n.href || "#"}">${svg(n.icon)}<span>${n.label}</span></a>`).join("");
+
+  $("socials").innerHTML = c.socials.map((s) =>
+    `<a href="${s.url}" target="_blank" rel="noopener" aria-label="${s.type}">${svg(s.type)}</a>`).join("");
+
+  $("info").innerHTML = c.info.map((i) =>
+    `<div class="info-item">${svg(i.icon)}<div><small>${i.label}</small><span>${i.value}</span></div></div>`).join("");
+
+  $("quoteText").textContent = c.quote.text;
+  $("quoteAuthor").textContent = "— " + c.quote.author;
+
+  $("skills").innerHTML = c.skills.map((s) => `<span class="chip">${s}</span>`).join("");
+
+  $("interestsTitle").innerHTML = svg("rocket") + c.interestsTitle;
+  $("interests").innerHTML = c.interests.map((i) =>
+    `<div class="interest">${svg(i.icon)}<span>${i.title}</span><em>${i.note}</em></div>`).join("");
+}
+
+/* ---------- Chuyển trang (Home / Music) ---------- */
+function showView(name) {
+  const v = name === "music" ? "music" : "home";
+  $("viewHome").hidden = v !== "home";
+  $("viewMusic").hidden = v !== "music";
+  document.querySelectorAll("#nav a[data-view]").forEach((a) =>
+    a.classList.toggle("active", a.dataset.view === v));
+}
+function initViews() {
+  const fromHash = () => showView(location.hash.slice(1));
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
+  $("viewAll").onclick = () => { location.hash = "music"; };
+}
+
+/* ---------- Discord qua Lanyard API ---------- */
+async function loadDiscord() {
+  const d = CONFIG.discord;
+  if (!d.enabled || !d.userId) return;
+  try {
+    const res = await fetch(`https://api.lanyard.rest/v1/users/${d.userId}`);
+    const json = await res.json();
+    if (!json.success) throw new Error("Lanyard không tìm thấy user");
+    const u = json.data.discord_user;
+
+    if (d.useName) {
+      const n = d.nameType === "username" ? u.username : (u.global_name || u.username);
+      $("name").textContent = n;
+      $("brandText").textContent = n;
+      document.title = n;
+    }
+    if (d.useAvatar && u.avatar) {
+      const ext = u.avatar.startsWith("a_") ? "gif" : "png";
+      $("avatar").src = `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.${ext}?size=256`;
+    }
+  } catch (err) {
+    console.warn("Discord API lỗi, dùng thông tin trong CONFIG:", err);
+  }
+}
+
+/* ---------- Trình phát nhạc ---------- */
+function initPlayer() {
+  const M = CONFIG.music;
+  const list = M.playlist;
+  const audio = new Audio();
+  audio.preload = "metadata";
+
+  let idx = 0, playing = false, shuffle = false, repeat = 0; // repeat: 0 tắt, 1 cả list, 2 một bài
+  let fake = 0, timer = null, muted = false;
+  const liked = new Set();
+
+  let volume = M.volume;
+  try { const s = parseFloat(localStorage.getItem("bio-volume")); if (s >= 0 && s <= 1) volume = s; } catch (e) {}
+
+  const cur = () => list[idx];
+  const isReal = () => !!cur().src;
+  const total = () => (isReal() && isFinite(audio.duration) ? audio.duration : cur().duration || 0);
+  const now = () => (isReal() ? audio.currentTime : fake);
+
+  /* --- vẽ lại giao diện --- */
+  function paint() {
+    const t = total(), n = now(), p = t ? Math.min(n / t, 1) : 0;
+    $("seek").value = Math.round(p * 1000);
+    $("seek").style.setProperty("--p", p * 100 + "%");
+    $("tNow").textContent = fmt(n);
+    $("tTotal").textContent = fmt(t);
+  }
+  function renderNow() {
+    const t = cur();
+    $("cover").src = coverOf(t, idx);
+    $("songTitle").textContent = t.title;
+    $("songArtist").textContent = t.artist;
+    $("nowLabel").textContent = M.label;
+    $("heart").classList.toggle("on", liked.has(idx));
+  }
+  const eq = '<span class="eq"><i></i><i></i><i></i></span>';
+  function renderLists() {
+    $("miniList").innerHTML = list.map((t, i) =>
+      `<button class="trk${i === idx ? " active" : ""}" data-i="${i}" aria-label="Phát ${esc(t.title)}">
+        <img class="tc" src="${coverOf(t, i)}" alt="">
+        <span class="tt"><b>${esc(t.title)}</b><small>${esc(t.artist)}</small></span>
+        <span><span class="dur">${fmt(t.duration || 0)}</span>${eq}</span>
+      </button>`).join("");
+    $("fullList").innerHTML = list.map((t, i) =>
+      `<button class="row${i === idx ? " active" : ""}" data-i="${i}" aria-label="Phát ${esc(t.title)}">
+        <span class="ix"><b>${i + 1}</b>${eq}</span>
+        <img class="tc" src="${coverOf(t, i)}" alt="">
+        <span class="tt"><b>${esc(t.title)}</b><small>${esc(t.artist)}</small></span>
+        <span class="dur">${fmt(t.duration || 0)}</span>
+      </button>`).join("");
+    $("plCount").textContent = `${list.length} bài hát`;
+    centerActive();
+  }
+  function centerActive() {
+    const m = $("miniList"), a = m.querySelector(".active");
+    if (a) m.scrollTop = a.offsetTop - m.clientHeight / 2 + a.clientHeight / 2;
+  }
+  function renderControls() {
+    $("play").innerHTML = svg(playing ? "pause" : "play");
+    document.body.classList.toggle("is-playing", playing);
+    $("shuffle").classList.toggle("on", shuffle);
+    $("shuffleAll").classList.toggle("on", shuffle);
+    $("repeat").classList.toggle("on", repeat > 0);
+    $("repeat").dataset.mode = ["off", "all", "one"][repeat];
+    $("repeat").title = ["Lặp lại: tắt", "Lặp lại cả danh sách", "Lặp lại một bài"][repeat];
+  }
+  function renderVolume() {
+    const v = muted ? 0 : volume;
+    audio.volume = v;
+    $("vol").value = Math.round(v * 100);
+    $("vol").style.setProperty("--p", v * 100 + "%");
+    $("volNum").textContent = Math.round(v * 100);
+    $("mute").innerHTML = svg(v === 0 ? "volMute" : v < 0.5 ? "volLow" : "volHigh");
+  }
+
+  /* --- phát / dừng --- */
+  function stopFake() { clearInterval(timer); timer = null; }
+  function setPlaying(v) {
+    playing = v;
+    stopFake();
+    if (v) {
+      if (isReal()) {
+        audio.play().catch(() => { playing = false; renderControls(); });
+      } else {
+        timer = setInterval(() => {
+          fake = Math.min(fake + 0.25, cur().duration);
+          paint();
+          if (fake >= cur().duration) next(true);
+        }, 250);
+      }
+    } else {
+      audio.pause();
+    }
+    renderControls();
+  }
+
+  function loadTrack(i, autoplay) {
+    idx = i;
+    stopFake();
+    audio.pause();
+    fake = 0;
+    if (isReal()) audio.src = cur().src; else audio.removeAttribute("src");
+    renderNow();
+    renderLists();
+    paint();
+    setPlaying(!!autoplay);
+  }
+
+  function next(fromEnd) {
+    if (fromEnd && repeat === 2) { loadTrack(idx, true); return; }
+    let n;
+    if (shuffle && list.length > 1) {
+      do { n = Math.floor(Math.random() * list.length); } while (n === idx);
+    } else {
+      n = idx + 1;
+      if (n >= list.length) {
+        if (fromEnd && repeat === 0) { loadTrack(0, false); return; }
+        n = 0;
+      }
+    }
+    loadTrack(n, true);
+  }
+  function prev() {
+    if (now() > 3) { if (isReal()) audio.currentTime = 0; else fake = 0; paint(); return; }
+    loadTrack((idx - 1 + list.length) % list.length, true);
+  }
+  function select(i) { if (i === idx) setPlaying(!playing); else loadTrack(i, true); }
+
+  /* --- sự kiện --- */
+  audio.addEventListener("timeupdate", paint);
+  audio.addEventListener("loadedmetadata", () => {
+    if (isFinite(audio.duration)) { cur().duration = Math.round(audio.duration); renderLists(); }
+    paint();
+  });
+  audio.addEventListener("ended", () => next(true));
+  audio.addEventListener("error", () => { if (isReal() && playing) { playing = false; renderControls(); } });
+
+  $("play").onclick = () => setPlaying(!playing);
+  $("prev").onclick = prev;
+  $("next").onclick = () => next(false);
+  $("shuffle").onclick = () => { shuffle = !shuffle; renderControls(); };
+  $("shuffleAll").onclick = () => { shuffle = true; loadTrack(Math.floor(Math.random() * list.length), true); };
+  $("playAll").onclick = () => loadTrack(0, true);
+  $("repeat").onclick = () => { repeat = (repeat + 1) % 3; renderControls(); };
+  $("heart").onclick = () => { liked.has(idx) ? liked.delete(idx) : liked.add(idx); $("heart").classList.toggle("on", liked.has(idx)); };
+
+  $("seek").oninput = (e) => {
+    const t = (e.target.value / 1000) * total();
+    if (isReal()) audio.currentTime = t; else fake = t;
+    paint();
+  };
+  $("vol").oninput = (e) => {
+    volume = e.target.value / 100;
+    muted = volume === 0;
+    try { localStorage.setItem("bio-volume", String(volume)); } catch (err) {}
+    renderVolume();
+  };
+  // Máy tính: rê chuột vào là hiện thanh, bấm nút để tắt/bật tiếng.
+  // Điện thoại (không có hover): bấm nút để mở/đóng thanh, kéo về 0 để tắt tiếng.
+  const noHover = window.matchMedia("(hover: none)");
+  $("mute").onclick = () => {
+    if (noHover.matches) { $("volWrap").classList.toggle("open"); return; }
+    if (muted && volume === 0) volume = 0.5;
+    muted = !muted;
+    renderVolume();
+  };
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest("#volWrap")) $("volWrap").classList.remove("open");
+  });
+  $("miniList").onclick = $("fullList").onclick = (e) => {
+    const b = e.target.closest("[data-i]");
+    if (b) select(+b.dataset.i);
+  };
+
+  /* --- mở / tắt danh sách phát (nút 3 chấm) --- */
+  let miniOpen = M.miniOpen !== false;
+  function renderMini() {
+    $("miniWrap").classList.toggle("closed", !miniOpen);
+    $("miniToggle").setAttribute("aria-expanded", String(miniOpen));
+  }
+  $("miniToggle").onclick = () => {
+    miniOpen = !miniOpen;
+    renderMini();
+    if (miniOpen) setTimeout(centerActive, 280);
+  };
+
+  /* --- khởi tạo --- */
+  $("miniToggle").innerHTML = svg("dots");
+  renderMini();
+  $("heart").innerHTML = svg("heart");
+  $("shuffle").innerHTML = svg("shuffle");
+  $("repeat").innerHTML = svg("repeat");
+  $("prev").innerHTML = svg("prev");
+  $("next").innerHTML = svg("next");
+  $("miniTitle").innerHTML = svg("list") + esc(M.miniTitle);
+  $("playAll").innerHTML = svg("play") + "Phát tất cả";
+  $("shuffleAll").innerHTML = svg("shuffle") + "Ngẫu nhiên";
+  if (isReal()) audio.src = cur().src;
+  renderNow();
+  renderLists();
+  renderControls();
+  renderVolume();
+  paint();
+
+  return { play: () => { if (!playing) setPlaying(true); } };
+}
+
+/* ---------- Màn hình mở đầu: cục vật chất tối bẻ cong ánh sáng, chạm vào là bị hút vào trang bio ---------- */
+// Một khối vật chất tối vô hình bay vòng tròn trước một thiên hà mô phỏng. Nó không phát sáng,
+// chỉ bẻ cong ánh sáng của sao và thiên hà phía sau (thấu kính hấp dẫn của khối điểm).
+// Nếu thiết bị không hỗ trợ WebGL thì tự chuyển sang bản vẽ 2D đơn giản.
+const LENS_FRAG = `
+precision highp float;
+uniform vec2 uRes;
+uniform float uTime;
+uniform vec2 uLens;      // vị trí vật chất tối (đơn vị: chiều cao màn hình)
+uniform float uThetaE;   // bán kính Einstein: độ mạnh của việc bẻ cong
+uniform float uCore;     // lõi tối ở giữa
+uniform float uSwirl;    // độ xoáy khi bị hút vào
+uniform float uFade;     // 1 = bình thường, 0 = đen hẳn
+
+float hash21(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float hash31(vec3 p) { p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
+
+float vnoise(vec3 p) {
+  vec3 i = floor(p);
+  vec3 f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  float a = hash31(i);
+  float b = hash31(i + vec3(1.0, 0.0, 0.0));
+  float c = hash31(i + vec3(0.0, 1.0, 0.0));
+  float d = hash31(i + vec3(1.0, 1.0, 0.0));
+  float e = hash31(i + vec3(0.0, 0.0, 1.0));
+  float g = hash31(i + vec3(1.0, 0.0, 1.0));
+  float h = hash31(i + vec3(0.0, 1.0, 1.0));
+  float k = hash31(i + vec3(1.0, 1.0, 1.0));
+  return mix(mix(mix(a, b, f.x), mix(c, d, f.x), f.y),
+             mix(mix(e, g, f.x), mix(h, k, f.x), f.y), f.z);
+}
+
+float fbm(vec3 p) {
+  float s = 0.0;
+  float a = 0.5;
+  for (int i = 0; i < 5; i++) {
+    s += a * vnoise(p);
+    p = p * 2.03 + vec3(7.1, 3.7, 1.3);
+    a *= 0.5;
+  }
+  return s;
+}
+
+vec3 starLayer(vec2 q, float sc, float thr) {
+  vec2 p = q * sc;
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  float h = hash21(i);
+  if (h < thr) return vec3(0.0);
+  vec2 c = 0.2 + 0.6 * vec2(hash21(i + 7.3), hash21(i + 13.1));
+  float d = length(f - c);
+  float size = 0.07 + 0.12 * hash21(i + 3.7);
+  float br = 0.4 + 1.8 * pow(hash21(i + 9.2), 3.0);
+  float tw = 0.85 + 0.15 * sin(uTime * 1.4 + h * 60.0);
+  vec3 tint = mix(vec3(0.7, 0.8, 1.0), vec3(1.0, 0.85, 0.7), hash21(i + 21.0));
+  return tint * smoothstep(size, 0.0, d) * br * tw;
+}
+
+vec3 galaxy(vec2 q) {
+  vec2 c = q - vec2(0.14, 0.03);
+  c = mat2(0.9, -0.43, 0.43, 0.9) * c;
+  c.y /= 0.52;
+  float r = length(c);
+  float a = atan(c.y, c.x);
+  float n = fbm(vec3(c * 5.0, 2.0));
+  float ph = a * 2.0 - log(r + 0.03) * 5.2 + n * 1.6;
+  float arm = pow(0.5 + 0.5 * cos(ph), 2.2);
+  float disk = exp(-r * 3.2);
+  float bulge = exp(-r * r * 90.0) * 1.8 + exp(-r * 12.0) * 0.5;
+  float dust = smoothstep(0.35, 0.8, fbm(vec3(c * 9.0 + 4.0, 7.0))) * arm * disk * 0.8;
+  float dens = disk * (0.18 + 0.9 * arm) * (0.6 + 0.8 * n);
+  float hii = smoothstep(0.55, 0.85, vnoise(vec3(c * 22.0, 3.0)));
+  vec3 armCol = mix(vec3(0.50, 0.62, 1.0), vec3(1.0, 0.50, 0.68), hii * 0.6);
+  vec3 col = armCol * dens * 1.3;
+  col += vec3(1.0, 0.78, 0.5) * bulge;
+  col *= 1.0 - dust;
+  col *= smoothstep(0.8, 0.35, r);
+  float sp = hash21(floor(c * 260.0));
+  col += vec3(1.0, 0.95, 0.9) * step(0.992, sp) * dens * 1.6;
+  return col;
+}
+
+vec3 background(vec2 q) {
+  vec3 col = vec3(0.004, 0.006, 0.02);
+  col += vec3(0.02, 0.03, 0.09) * pow(fbm(vec3(q * 1.4 + 11.0, 5.0)), 2.0);
+  col += galaxy(q);
+  col += starLayer(q, 42.0, 0.88);
+  col += starLayer(q, 95.0, 0.93) * 0.9;
+  col += starLayer(q, 200.0, 0.96) * 0.8;
+  return col;
+}
+
+void main() {
+  vec2 fc = gl_FragCoord.xy;
+  float s = min(uRes.y, uRes.x * 1.15);
+  vec2 uv = (fc - 0.5 * uRes) / s;
+
+  // thấu kính hấp dẫn: điểm ảnh θ lấy ánh sáng từ vị trí β = θ - θE² θ / |θ|²
+  vec2 th = uv - uLens;
+  float t2 = dot(th, th) + 1e-6;
+  float tl = sqrt(t2);
+  float ang = uSwirl / (tl + 0.12);
+  float cs = cos(ang);
+  float sn = sin(ang);
+  vec2 ths = vec2(cs * th.x - sn * th.y, sn * th.x + cs * th.y);
+  vec2 src = uLens + ths - uThetaE * uThetaE * ths / t2;
+
+  vec3 col = background(src);
+
+  // lõi tối nhỏ ở giữa khối vật chất tối
+  float shade = 1.0 - smoothstep(uCore * 0.5, uCore * 2.2, tl);
+  col *= 1.0 - shade * mix(0.65, 1.0, smoothstep(0.0, 0.5, uThetaE));
+
+  col = 1.0 - exp(-col * 1.35);
+  float vg = smoothstep(1.25, 0.2, length((fc - 0.5 * uRes) / uRes.y));
+  col *= mix(0.55, 1.0, vg);
+  col *= uFade;
+  col += (hash21(fc + uTime) - 0.5) / 170.0 * uFade;
+  gl_FragColor = vec4(col, 1.0);
+}
+`;
+
+function createGLView() {
+  const cv = $("introCanvas");
+  let gl = null;
+  try { gl = cv.getContext("webgl", { antialias: false, alpha: false, powerPreference: "high-performance" }); } catch (e) {}
+  if (!gl) return null;
+
+  const compile = (type, src) => {
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(sh)); return null; }
+    return sh;
+  };
+  const vs = compile(gl.VERTEX_SHADER, "attribute vec2 a; void main() { gl_Position = vec4(a, 0.0, 1.0); }");
+  const fs = compile(gl.FRAGMENT_SHADER, LENS_FRAG);
+  if (!vs || !fs) return null;
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.warn(gl.getProgramInfoLog(prog)); return null; }
+  gl.useProgram(prog);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, "a");
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const U = {};
+  ["uRes", "uTime", "uLens", "uThetaE", "uCore", "uSwirl", "uFade"].forEach((n) => { U[n] = gl.getUniformLocation(prog, n); });
+
+  return {
+    resize(W, H) {
+      const k = Math.min(1, Math.sqrt(1.2e6 / (W * H)));   // giữ số điểm ảnh vừa phải cho máy yếu
+      cv.width = Math.max(2, Math.round(W * k));
+      cv.height = Math.max(2, Math.round(H * k));
+      gl.viewport(0, 0, cv.width, cv.height);
+    },
+    // clock: giây (tăng nhanh dần khi lao vào), e: 0 là đang chờ, 1 là đã bị hút hết
+    draw(clock, dt, e) {
+      const R = 0.27;                                   // bán kính quỹ đạo vòng tròn
+      const a = clock * 0.42;
+      const px = R * Math.cos(a), py = 0.03 + R * Math.sin(a);
+      const pull = Math.min(1, e / 0.7);
+      const k = pull * pull * (3 - 2 * pull);
+      const lx = px * (1 - k), ly = py * (1 - k) + 0.0 * k;
+      gl.uniform2f(U.uRes, cv.width, cv.height);
+      gl.uniform1f(U.uTime, clock);
+      gl.uniform2f(U.uLens, lx, ly);
+      gl.uniform1f(U.uThetaE, 0.07 + 0.92 * e * e);
+      gl.uniform1f(U.uCore, 0.012 + 1.25 * e * e * e);
+      gl.uniform1f(U.uSwirl, 6.0 * e * e);
+      gl.uniform1f(U.uFade, 1.0 - Math.min(1, Math.max(0, (e - 0.9) / 0.1)));
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    },
+    destroy() { const x = gl.getExtension("WEBGL_lose_context"); if (x) x.loseContext(); }
+  };
+}
+
+// Bản dự phòng 2D (khi không có WebGL): thiên hà mờ + khối tối bay vòng tròn
+function create2DView() {
+  const old = $("introCanvas");
+  const cv = document.createElement("canvas");
+  cv.id = "introCanvas";
+  old.replaceWith(cv);
+  const ctx = cv.getContext("2d");
+  let W, H, S;
+
+  const stars = Array.from({ length: 260 }, () => ({
+    x: Math.random(), y: Math.random(), s: 0.4 + Math.random() * 1.2, ph: Math.random() * 6.28
+  }));
+
+  return {
+    resize(w, h) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = w; H = h; S = Math.min(h, w * 1.15);
+      cv.width = W * dpr; cv.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    },
+    draw(clock, dt, e) {
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = "#02030a";
+      ctx.fillRect(0, 0, W, H);
+
+      // thiên hà
+      ctx.save();
+      ctx.translate(W / 2 + 0.14 * S, H / 2 - 0.03 * S);
+      ctx.rotate(-0.45);
+      ctx.scale(1, 0.52);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, S * 0.7);
+      g.addColorStop(0, "rgba(255, 215, 160, .9)");
+      g.addColorStop(0.12, "rgba(200, 190, 255, .45)");
+      g.addColorStop(0.5, "rgba(90, 120, 255, .16)");
+      g.addColorStop(1, "rgba(60, 80, 220, 0)");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(0, 0, S * 0.7, 0, 6.283); ctx.fill();
+      ctx.restore();
+
+      // sao
+      for (const st of stars) {
+        const tw = 0.5 + 0.5 * Math.sin(clock * 1.4 + st.ph);
+        ctx.fillStyle = `rgba(220, 230, 255, ${(0.35 + 0.5 * tw) * (1 - e)})`;
+        ctx.beginPath(); ctx.arc(st.x * W, st.y * H, st.s, 0, 6.283); ctx.fill();
+      }
+
+      // khối vật chất tối bay vòng tròn
+      const a = clock * 0.42, R = 0.27;
+      const k = Math.min(1, e / 0.7);
+      const lx = W / 2 + R * Math.cos(a) * S * (1 - k * k);
+      const ly = H / 2 - (0.03 + R * Math.sin(a)) * S * (1 - k * k);
+      const rad = S * (0.05 + 1.6 * e * e * e);
+      const d = ctx.createRadialGradient(lx, ly, 0, lx, ly, rad * 2.2);
+      d.addColorStop(0, "rgba(0, 0, 0, 1)");
+      d.addColorStop(0.45, "rgba(0, 0, 0, .9)");
+      d.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = d;
+      ctx.beginPath(); ctx.arc(lx, ly, rad * 2.2, 0, 6.283); ctx.fill();
+    },
+    destroy() {}
+  };
+}
+
+function initIntro(player) {
+  const cfg = CONFIG.intro || {};
+  const el = $("intro");
+  if (!cfg.enabled) { el.remove(); return; }
+
+  const root = document.documentElement;
+  root.classList.add("intro-on");
+  $("introHint").textContent = cfg.text || "";
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const DUR = 2900;       // thời gian bị hút vào khối vật chất tối (ms)
+
+  const view = createGLView() || create2DView();
+  const onResize = () => view.resize(window.innerWidth, window.innerHeight);
+  onResize();
+  window.addEventListener("resize", onResize);
+
+  let going = false, finished = false, t0 = 0, last = performance.now(), clock = 0;
+
+  function frame(t) {
+    if (finished) return;
+    const dt = Math.min((t - last) / 1000, 0.05);
+    last = t;
+    const p = going ? Math.min((t - t0) / DUR, 1) : 0;
+    const e = Math.pow(p, 1.3);
+    clock += dt * (1 + 10 * e);
+    view.draw(clock, dt, e, going);
+    if (p >= 1) { finish(); return; }
+    requestAnimationFrame(frame);
+  }
+
+  function finish() {
+    finished = true;
+    window.removeEventListener("resize", onResize);
+    root.classList.remove("intro-on");
+    document.querySelector(".page").classList.add("reveal");
+    el.classList.add("leaving");
+    setTimeout(() => { view.destroy(); el.remove(); }, 1100);
+  }
+
+  function enter() {
+    if (going) return;
+    going = true;
+    t0 = performance.now();
+    el.classList.add("going");
+    if (cfg.startMusic && player) player.play();   // phải gọi ngay lúc chạm để trình duyệt cho phép phát nhạc
+    if (reduce) finish();
+  }
+
+  el.addEventListener("click", enter);
+  el.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); enter(); }
+  });
+  el.focus({ preventScroll: true });
+
+  if (reduce) view.draw(0, 0, 0, false); else requestAnimationFrame(frame);
+}
+
+render();
+initViews();
+const player = initPlayer();
+initIntro(player);
+loadDiscord();
+</script>
+</body>
+</html>
